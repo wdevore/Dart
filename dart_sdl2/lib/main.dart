@@ -143,53 +143,25 @@ int pixelBuf() {
     sdlQuit();
   }
 
-  // create texture
-  // var texture = renderer.createTexture(SDL_PIXELFORMAT_RGBA32,
-  //     SDL_TEXTUREACCESS_STREAMING, gWinWidth, gWinHeight);
-
-  // if (texture == nullptr) {
-  //   print('Unable to create texture: ${sdlGetError()}');
-  //   renderer.destroy();
-  //   window.destroy();
-  //   sdlQuit();
-  // }
-
-  // array of pixels
-  // var texturePixels = calloc<Pointer<Uint32>>();
-  // var texturePitch = calloc<Int32>();
-
   Colors colors = Colors();
 
   rb.begin();
-  // texture.lock(nullptr, texturePixels, texturePitch);
 
   // update texture with new data. Upper left position (aka 0)
   rb.setPixelXY(colors.red, 0, 0);
 
-  // Pointer<Uint32> bufferAddr = texturePixels.value;
-  // setPixelByOffset(red, 0, bufferAddr);
-  // setPixelXY(colors.red, 0, 0, bufferAddr);
-
   // Calc address offset to x,y position. Middle of screen
-  // setPixelByOffset(
-  //     green, gWinWidth * gWinHeight ~/ 2 + gWinWidth ~/ 2, bufferAddr);
   // setPixelXY(colors.green, gWinWidth ~/ 2 - 1, gWinHeight ~/ 2 - 1, bufferAddr);
   rb.setPixelXY(colors.green, gWinWidth ~/ 2 - 1, gWinHeight ~/ 2 - 1);
 
-  // Top right8
-  // setPixelByOffset(yellow, gWinWidth - 1, bufferAddr);
-  // setPixelXY(colors.yellow, gWinWidth - 1, 0, bufferAddr);
+  // Top right
   rb.setPixelXY(colors.yellow, gWinWidth - 1, 0);
 
   // Lower right
-  // setPixelByOffset(blue, gWinWidth * gWinHeight - 1, bufferAddr);
-  // setPixelXY(colors.white, gWinWidth - 1, gWinHeight - 1, bufferAddr);
   rb.setPixelXY(colors.white, gWinWidth - 1, gWinHeight - 1);
 
-  // setPixelXY(colors.cyan, 1, 1, bufferAddr);
   rb.setPixelXY(colors.cyan, 1, 1);
 
-  // texture.unlock();
   rb.end();
 
   // main loop
@@ -213,7 +185,6 @@ int pixelBuf() {
   }
   event.callocFree();
 
-  // texture.destroy();
   rb.destroy();
 
   renderer.destroy();
