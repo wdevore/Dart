@@ -13,6 +13,7 @@ class RasterBuffer {
   Pointer<Pointer<Uint32>> texturePixels = calloc<Pointer<Uint32>>();
   Pointer<Int32> texturePitch = calloc<Int32>();
   Pointer<Uint32>? bufferAddr;
+  Pointer<Uint32>? posOffset;
 
   int create(Pointer<SdlRenderer> renderer, int width, int height) {
     this.width = width;
@@ -39,13 +40,13 @@ class RasterBuffer {
 
   void setPixelXY(int color, int x, int y) {
     int offset = x + (y * width);
-    Pointer<Uint32> posOffset = bufferAddr! + offset;
-    posOffset.value = color;
+    posOffset = bufferAddr! + offset;
+    posOffset?.value = color;
   }
 
   void setPixelByOffset(int color, int offset) {
-    Pointer<Uint32> posOffset = bufferAddr! + offset;
-    posOffset.value = color;
+    posOffset = bufferAddr! + offset;
+    posOffset?.value = color;
   }
 
   void destroy() {
