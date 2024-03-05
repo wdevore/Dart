@@ -151,7 +151,6 @@ int pixelBuf() {
   rb.setPixelXY(colors.red, 0, 0);
 
   // Calc address offset to x,y position. Middle of screen
-  // setPixelXY(colors.green, gWinWidth ~/ 2 - 1, gWinHeight ~/ 2 - 1, bufferAddr);
   rb.setPixelXY(colors.green, gWinWidth ~/ 2 - 1, gWinHeight ~/ 2 - 1);
 
   // Top right
@@ -193,15 +192,4 @@ int pixelBuf() {
   sdlQuit();
 
   return 0;
-}
-
-void setPixelXY(int color, int x, int y, Pointer<Uint32> bufferAddr) {
-  int offset = x + (y * gWinWidth);
-  Pointer<Uint32> posOffset = bufferAddr + offset;
-  posOffset.value = color;
-}
-
-void setPixelByOffset(int color, int offset, Pointer<Uint32> bufferAddr) {
-  Pointer<Uint32> posOffset = bufferAddr + offset;
-  posOffset.value = color;
 }
