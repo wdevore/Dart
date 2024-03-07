@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "TriangleRender",
+            "cwd": "triangle_render",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
             "name": "SDL2",
             "cwd": "dart_sdl2",
             "request": "launch",

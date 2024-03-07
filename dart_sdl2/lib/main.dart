@@ -165,7 +165,9 @@ int pixelBuf() {
 
   // main loop
   var event = calloc<SdlEvent>();
+
   var running = true;
+
   while (running) {
     while (event.poll() != 0) {
       switch (event.type) {
@@ -182,6 +184,7 @@ int pixelBuf() {
         ..present();
     }
   }
+
   event.callocFree();
 
   rb.destroy();
