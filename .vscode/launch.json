@@ -11,6 +11,12 @@
             "type": "dart"
         },
         {
+            "name": "TTFExample",
+            "cwd": "ttf_example",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
             "name": "SDL2",
             "cwd": "dart_sdl2",
             "request": "launch",

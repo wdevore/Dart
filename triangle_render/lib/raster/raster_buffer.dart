@@ -2,6 +2,8 @@
 // This buffer must be blitted to another buffer, for example,
 // PNG or display buffer (like SDL).
 import 'dart:ffi';
+import 'dart:math';
+import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:sdl2/sdl2.dart';
 import 'package:triangle_render/geometry/edge.dart';
@@ -11,16 +13,20 @@ class RasterBuffer {
   int width = 0;
   int height = 0;
   bool alphaBlending = false;
+  int size = 0;
 
   // Pen colors
-  int clearColor = Colors().black;
   int pixelColor = Colors().black;
+  int clearColor = Colors().darkBlack;
 
   Pointer<SdlTexture>? texture;
   Pointer<Pointer<Uint32>> texturePixels = calloc<Pointer<Uint32>>();
   Pointer<Int32> texturePitch = calloc<Int32>();
   Pointer<Uint32>? bufferAddr;
   Pointer<Uint32>? posOffset;
+
+  Rectangle<double>? clearRect;
+  late Uint32List textureAsList;
 
   int create(Pointer<SdlRenderer> renderer, int width, int height) {
     this.width = width;
@@ -34,15 +40,43 @@ class RasterBuffer {
       return -1;
     }
 
+    clearRect = Rectangle<double>(
+      0,
+      0,
+      (width - 1).toDouble(),
+      (height - 1).toDouble(),
+    );
+
+    size = width * height;
+
     return 0;
   }
 
   void begin() {
     texture?.lock(nullptr, texturePixels, texturePitch);
     bufferAddr = texturePixels.value;
+    textureAsList = bufferAddr!.asTypedList(size);
   }
 
   void end() => texture?.unlock();
+
+  void clear(Pointer<SdlRenderer> renderer) {
+    // Slow manual iteration
+    // for (var i = 0; i < width * height - 1; i++) {
+    //   posOffset = bufferAddr! + i;
+    //   posOffset?.value = clearColor;
+    // }
+
+    // A bit faster
+    textureAsList.fillRange(0, size - 1, clearColor);
+
+    // Doesn't work because this buffer uses pointers.
+    // Kept for posterity.
+    // renderer.setTarget(texture!);
+    // renderer.setDrawColor(0xff, 0x00, 0x00, SDL_ALPHA_OPAQUE);
+    // renderer.fillRect(clearRect);
+    // renderer.setTarget(nullptr);
+  }
 
   void setPixelXY(int color, int x, int y) {
     if (x < 0 || x > width || y < 0 || y > height) {

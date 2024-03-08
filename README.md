@@ -16,3 +16,8 @@ flutter upgrade
 after that run ```flutter doctor -v``` as you see your dart is still an old one
 
 in this step, you should update it manually, as the doc says Dart
+
+# Create a new project
+```sh
+dart create ttf_example
+```

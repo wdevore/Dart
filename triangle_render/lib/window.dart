@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:sdl2/sdl2.dart';
+import 'package:triangle_render/palette/colors.dart';
 
 class Window {
   Pointer<SdlWindow> window = nullptr;
@@ -10,6 +11,8 @@ class Window {
   final int width;
   final int height;
   final int scale;
+
+  int clearColor = Colors().black;
 
   Window(this.width, this.height, this.scale) {
     window = calloc<Pointer<SdlWindow>>() as Pointer<SdlWindow>;
@@ -49,6 +52,13 @@ class Window {
     renderer?.setLogicalSize(width, height);
 
     return 0;
+  }
+
+  void clear() {
+    renderer?.clear();
+    // List<int> c = Colors().redC;
+    // renderer?.setDrawColor(c[0], c[1], c[2], c[3]);
+    // renderer?.fillRect(clearRect);
   }
 
   void destroy() {
