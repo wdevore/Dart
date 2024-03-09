@@ -1,22 +1,40 @@
 import 'dart:ffi';
-import 'dart:math';
 import 'package:ffi/ffi.dart';
 import 'package:sdl2/sdl2.dart';
 import 'package:triangle_render/geometry/triangle.dart';
 import 'package:triangle_render/raster/font.dart';
 import 'package:triangle_render/raster/raster_buffer.dart';
 import 'package:triangle_render/raster/text.dart';
+import 'package:triangle_render/triangle_anim.dart';
 import 'package:triangle_render/window.dart';
 
 const gWinWidth = 160 * 4;
 const gWinHeight = 120 * 4;
-const scale = 2;
+const scale = 1;
 
 int main() {
-  return pixelBuf();
+  return run();
 }
 
-int pixelBuf() {
+// NOTE: Not need
+// int myEventFilter(Pointer<Uint8> running, Pointer<SdlEvent> event) {
+//   switch (event.type) {
+//     case SDL_QUIT:
+//       running.value = 0;
+//       break;
+//     case SDL_KEYDOWN:
+//       var keys = sdlGetKeyboardState(nullptr);
+//       // aka backtick '`' key
+//       if (keys[SDL_SCANCODE_GRAVE] != 0) {
+//         running.value = 0;
+//       }
+//     default:
+//       break;
+//   }
+//   return 1;
+// }
+
+int run() {
   Window window = Window(gWinWidth, gWinHeight, scale);
 
   int status = window.init();
@@ -44,16 +62,18 @@ int pixelBuf() {
     sdlQuit();
   }
 
+  TriangleAnimation tria = TriangleAnimation();
+
   Triangle tri = Triangle()
-    ..posX = 250
-    ..posY = 200
+    ..posX = tria.x
+    ..posY = tria.y
     ..set(
-      0,
-      50,
-      50,
-      50,
-      25,
-      0,
+      tria.x1,
+      tria.y1,
+      tria.x2,
+      tria.y2,
+      tria.x3,
+      tria.y3,
     );
 
   String fontPath = 'MontserratAlternates-Light.otf';
@@ -79,15 +99,25 @@ int pixelBuf() {
     return status;
   }
 
+  font.close();
+
+  // ---------------------------------------------
   // main loop
+  // ---------------------------------------------
   var event = calloc<SdlEvent>();
+
+  // var running = calloc<Uint8>();
+  // running.value = 1;
+  // sdlSetEventFilter(Pointer.fromFunction(myEventFilter, 0), running);
 
   var running = true;
 
-  font.close();
-
   while (running) {
-    while (event.poll() != 0) {
+    int pollState = sdlPollEvent(event);
+
+    // while (event.poll() != 0) {
+    // while (pollState > 0) {
+    if (pollState > 0) {
       switch (event.type) {
         case SDL_QUIT:
           running = false;
@@ -101,44 +131,57 @@ int pixelBuf() {
         default:
           break;
       }
-
-      // Initialize renderer color white for the background
-      // NOTE: can't be seen because raster buffer covers the
-      // entire view.
-      // window.renderer!.setDrawColor(0xff, 0xff, 0xff, SDL_ALPHA_OPAQUE);
-
-      // Don't need to clear because raster buffer covers the view.
-      // So use raster buffer clear instead.
-      // window.clear();
-
-      // -------------------------------
-      // Draw to custom texture buffer
-      // -------------------------------
-      rb.begin();
-
-      rb.clear(window.renderer!);
-
-      tri.fill(rb);
-
-      rb.end();
-
-      window.renderer!.copy(rb.texture!);
-
-      // window.renderer!.setDrawColor(0xff, 0x00, 0x00, SDL_ALPHA_OPAQUE);
-      // window.renderer!.drawLine(Point(30, 30), Point(70, 70));
-
-      // -------------------------------
-      // Draw overlay text
-      // -------------------------------
-      text.draw(window.renderer!);
-
-      // -------------------------------
-      // Display buffer
-      // -------------------------------
-      window.renderer!.present();
     }
+
+    // Initialize renderer color white for the background
+    // NOTE: can't be seen because raster buffer covers the
+    // entire view.
+    // window.renderer!.setDrawColor(0xff, 0xff, 0xff, SDL_ALPHA_OPAQUE);
+
+    // Don't need to clear because raster buffer covers the view.
+    // So use raster buffer clear instead.
+    // window.clear();
+
+    // -------------------------------
+    // Draw to custom texture buffer
+    // -------------------------------
+    rb.begin();
+
+    rb.clear(window.renderer!);
+
+    tri.fill(rb);
+
+    rb.end();
+
+    // Update animation and set new values
+    tria.update();
+    tri.set(
+      tria.xx2,
+      tria.xx3,
+      tria.xx,
+      tria.y2,
+      tria.x3,
+      tria.y3,
+    );
+
+    window.renderer!.copy(rb.texture!);
+
+    // window.renderer!.setDrawColor(0xff, 0x00, 0x00, SDL_ALPHA_OPAQUE);
+    // window.renderer!.drawLine(Point(30, 30), Point(70, 70));
+
+    // -------------------------------
+    // Draw overlay text
+    // -------------------------------
+    text.draw(window.renderer!);
+
+    // -------------------------------
+    // Display buffer
+    // -------------------------------
+    window.renderer!.present();
+    // }
   }
 
+  // running.callocFree();
   event.callocFree();
 
   rb.destroy();
