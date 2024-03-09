@@ -7,5 +7,5 @@ in `lib/`, and example unit test in `test/`.
 - ☑ Implement Surface class to contain window, renderer
 - ☑ Add event system for keyboard
 - ☑ Add fonts
-- ☒ Add animation event loop
+- ☑ Add animation event loop
 
