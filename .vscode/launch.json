@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "SoftRenderer",
+            "cwd": "soft_renderer",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
             "name": "TriangleRender",
             "cwd": "triangle_render",
             "request": "launch",
