@@ -11,8 +11,10 @@ class Object3D {
   // Position represented as a matrix
   final Matrix4 _translation = Matrix4.identity();
 
-  // Position represented as a vector
+  // Position
   final Vector3 position = Vector3.zero();
+  // Position represented as a vector4 homogenous coord for transforms
+  final Vector4 pos4 = Vector4.zero();
 
   // Orientation is expressed as a series of rotations
   final Matrix4 _rotation = Matrix4.identity();
@@ -31,6 +33,9 @@ class Object3D {
   final Vector3 p1 = Vector3.zero();
   final Vector3 p2 = Vector3.zero();
   final Vector3 p3 = Vector3.zero();
+
+  // Conversions
+  final Quaternion quat = Quaternion.identity();
 
   @override
   String toString() => name;
@@ -60,41 +65,39 @@ class Object3D {
 
   Matrix4 modelToWorldMatrix() {
     // Convert Axis-Angle into Quaternion
-    Quaternion q = Quaternion.axisAngle(aa.axis, aa.angle);
+    quat.setAxisAngle(aa.axis, aa.angle);
 
     // Then into Matrix
     _rotation.setIdentity();
-    _rotation.setRotation(q.asRotationMatrix());
+    _rotation.setRotation(quat.asRotationMatrix());
 
     _translation.setIdentity();
     _translation.setTranslation(position);
 
-    /*
-		 * Note the order in which I perform the multiplication. To do a
-		 * rotation followed by a translation will cause an orbiting effect.
-		 * 
-		 * To have a rotating effect about the objects local position
-		 * I would do a translation first followed by a rotation. As done below.
-		 */
+    // Note: the order in which I perform the multiplication. To do a
+    // rotation followed by a translation will cause an orbiting effect.
+    //
+    // To have a rotating effect about the objects local position
+    // I would do a translation first followed by a rotation. As done below.
+    // By multiplying Rotation and Translation methods on
+    // the SAME matrix, this will create a matrix that represents
+    // a translation first followed by a rotation which is in effect
+    // an orbiting camera.
+    //
+    // I personally like to control the order so I use two matrices.
     _affineTransform.setIdentity();
     _affineTransform.multiply(_translation);
     _affineTransform.multiply(_rotation);
 
     return _affineTransform;
+  }
 
-    /*
-		 * By calling the setRotation and setTranslation methods on
-		 * the SAME matrix, regardless of whether you call setRotation
-		 * first or second, this will create a matrix that represents
-		 * a translation first followed by a rotation which is in effect
-		 * an orbiting camera.
-		 * 
-		 * This is shown below.
-		 *    affineTransform.setRotation(aa);
-		 *    affineTransform.setTranslation(position);
-		 *    return affineTransform;
-		 * 
-		 * I personally like to control the order so I use two matrices.
-		 */
+  void setOrientation(double angle, double x, double y, double z) {
+    aa.axis.setValues(x, y, z);
+    aa.angle = angle * degrees2Radians;
+  }
+
+  int mapColor(int r, int g, int b) {
+    return (255 << 24) | (r << 16) | (g << 8) | (b);
   }
 }

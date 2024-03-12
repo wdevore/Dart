@@ -1,4 +1,4 @@
-class Edge {
+class RasterEdge {
   // Vertex indices into the ITriangle
   int xP = 0, yP = 0, xQ = 0, yQ = 0;
   int yBot = 0;

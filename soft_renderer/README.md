@@ -1,5 +1,7 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+# Info
+Create in March 2024
+
+by William Cleveland
 
 # Java
 To run some of the older SoftRenderer4 java code you need to install some form of java.

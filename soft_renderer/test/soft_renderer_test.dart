@@ -21,6 +21,7 @@ void main() {
     // homogeneous coordinates. It would have been more intuitive
     // if Vector3 was actually thought of as vectors and not points.
     Vector4 pos4 = Vector4.zero();
+
     position.x = 10.0;
     position.y = 0.0;
     position.z = 0.0;

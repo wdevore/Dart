@@ -6,7 +6,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:sdl2/sdl2.dart';
-import 'package:soft_renderer/geometry/edge.dart';
+import 'package:soft_renderer/geometry/raster_edge.dart';
 import 'package:soft_renderer/palette/colors.dart';
 
 class RasterBuffer {
@@ -206,7 +206,7 @@ class RasterBuffer {
   }
 
   void fillTriangleAmmeraal(
-      Edge left, Edge right, bool skipBottom, bool skipRight) {
+      RasterEdge left, RasterEdge right, bool skipBottom, bool skipRight) {
     int lx = left.x;
     int ly = left.y;
 
