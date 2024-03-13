@@ -44,13 +44,11 @@ void main() {
     print('_translation:\n $_translation');
 
     _affineTransform.setIdentity();
-    _affineTransform.multiply(_translation);
-    _affineTransform.multiply(_rotation);
+    _affineTransform = _translation * _rotation;
     print('_affineTransform:\n $_affineTransform');
 
     Vector4 vec4 = _affineTransform.transform(pos4);
     position.setValues(vec4.x, vec4.y, vec4.z);
-    print('vec4:\n $vec4');
     print('position:\n $position');
   });
 }

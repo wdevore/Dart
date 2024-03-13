@@ -86,6 +86,7 @@ class Object3D {
     //
     // I personally like to control the order so I use two matrices.
     _affineTransform.setIdentity();
+    // _affineTransform.setFrom(_translation * _rotation);
     _affineTransform.multiply(_translation);
     _affineTransform.multiply(_rotation);
 
