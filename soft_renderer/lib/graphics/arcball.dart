@@ -32,7 +32,7 @@ class ArcBall {
   Vector3 vVector = Vector3.zero();
   Vector3 base = Vector3.zero();
   Vector3 direction = Vector3.zero();
-  Point3 canvasSize = Point3();
+  Point3i canvasSize = Point3i();
   Vector3 canvasCenter = Vector3.zero();
   late AxisAngle aaYaxis;
   AxisAngle aa = AxisAngle();
@@ -88,8 +88,7 @@ class ArcBall {
   }
 
   void resize(int width, int height) {
-    canvasSize.x = width;
-    canvasSize.y = height;
+    canvasSize.set(width, height, 0);
     canvasCenter.x = canvasSize.x / 2.0;
     canvasCenter.y = canvasSize.y / 2.0;
     // 2.5 gives a decent size ball. 2.0 would give little room on the sides.
