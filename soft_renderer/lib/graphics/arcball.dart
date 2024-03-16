@@ -1,15 +1,10 @@
 import 'dart:math';
 
 import 'package:soft_renderer/geometry/axis_angle.dart';
-import 'package:soft_renderer/geometry/point3.dart';
+import 'package:soft_renderer/model/constants.dart';
 import 'package:vector_math/vector_math.dart';
 
 class ArcBall {
-  static const int noAxes = 0;
-  static const int lgNSEGS = 4;
-  static const int nSEGS = 1 << lgNSEGS;
-  static const double ePSILON = .0001;
-
   double radius = 0.0;
   Quaternion qNow = Quaternion.identity();
   Quaternion qDown = Quaternion.identity();
@@ -28,11 +23,11 @@ class ArcBall {
   Vector3 ballMouse = Vector3.zero();
   Quaternion q = Quaternion.identity();
   Quaternion qConj = Quaternion.identity();
-  List<Vector3> pts = List<Vector3>.filled(nSEGS + 1, Vector3.zero());
+  List<Vector3> pts = List<Vector3>.filled(Constants.nSEGS + 1, Vector3.zero());
   Vector3 vVector = Vector3.zero();
   Vector3 base = Vector3.zero();
   Vector3 direction = Vector3.zero();
-  Point3i canvasSize = Point3i();
+  Vector3 canvasSize = Vector3.zero();
   Vector3 canvasCenter = Vector3.zero();
   late AxisAngle aaYaxis;
   AxisAngle aa = AxisAngle();
@@ -88,14 +83,14 @@ class ArcBall {
   }
 
   void resize(int width, int height) {
-    canvasSize.set(width, height, 0);
+    canvasSize.setValues(width.toDouble(), height.toDouble(), 0);
     canvasCenter.x = canvasSize.x / 2.0;
     canvasCenter.y = canvasSize.y / 2.0;
     // 2.5 gives a decent size ball. 2.0 would give little room on the sides.
     radius = min(canvasSize.x, canvasSize.y) / 2.5;
   }
 
-  void remapScreenCoords(Point3 p) {
+  void remapScreenCoords(Vector3 p) {
     if (!screenYOrientation) {
       vNow.setValues(p.x.toDouble(), (canvasSize.y - p.y).toDouble(), 0.0);
     } else {
@@ -104,7 +99,7 @@ class ArcBall {
   }
 
   // Incorporate new mouse position.
-  void mouse(Point3 p) {
+  void mouse(Vector3 p) {
     remapScreenCoords(p);
   }
 
@@ -189,7 +184,7 @@ class ArcBall {
     // request. The resultent quaternion would be undefined. So instead, a manual rotation is
     // performed about the +y axis as shown below.
     double delta = 1.0 - (dot).abs();
-    if (delta < ePSILON && dot < 0.0) {
+    if (delta < Constants.ePSILON && dot < 0.0) {
       // Close enough
       qNow.setAxisAngle(aaYaxis.axis, aaYaxis.angle);
     } else {

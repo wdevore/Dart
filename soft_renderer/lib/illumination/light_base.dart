@@ -51,6 +51,6 @@ abstract class LightBase {
     this.b = b;
   }
 
-  Vector3? calcLightRayWithPoint(Point3d v);
+  Vector3? calcLightRayWithPoint(Vector3 v);
   Vector3? calcLightRay();
 }

@@ -1,4 +1,3 @@
-import 'package:soft_renderer/geometry/point3.dart';
 import 'package:soft_renderer/illumination/light_base.dart';
 import 'package:vector_math/vector_math.dart';
 
@@ -9,9 +8,8 @@ class PointLight extends LightBase {
   ///
   /// light position - triangle center.
   @override
-  Vector3? calcLightRayWithPoint(Point3d p) {
-    direction.setFrom(base);
-    direction.sub(p.asVector3()); // base - p
+  Vector3? calcLightRayWithPoint(Vector3 p) {
+    direction = base - p;
     direction.normalize();
     return direction;
   }
