@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "DartRunner",
+            "cwd": "/home/iposthuman/Documents/dart/DartOpenGL/",
+            "program": "basic_template/bin/main.dart",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Pikuma",
+            "cwd": "/media/iposthuman/Extreme SSD/Development/Dart/PikumaSoftRenderer/",
+            "program": "step11_clipping/bin/main.dart",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
             "name": "SoftRenderer",
             "cwd": "soft_renderer",
             "request": "launch",
